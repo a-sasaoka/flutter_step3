@@ -12,10 +12,14 @@ class MyApp extends StatelessWidget {
     return MaterialApp(
       title: 'Flutter Demo',
       theme: ThemeData(
-        colorScheme: ColorScheme.fromSeed(seedColor: Colors.deepPurple),
+        colorScheme: ColorScheme.fromSeed(
+          seedColor: Colors.deepPurple,
+        ),
         useMaterial3: true,
       ),
-      home: const MyHomePage(title: 'Flutter Demo Home Page'),
+      home: const MyHomePage(
+        title: 'Flutter Demo Home Page',
+      ),
     );
   }
 }
@@ -30,24 +34,78 @@ class MyHomePage extends StatefulWidget {
 }
 
 class _MyHomePageState extends State<MyHomePage> {
+  int _counter = 0;
+
+  void _incrementCounter() {
+    setState(() {
+      _counter++;
+    });
+  }
+
+  // カウンターの値で偶数、奇数のWidgetを出し分けるためのメソッド
+  Text _showString() {
+    if (_counter % 2 == 0) {
+      return const Text(
+        '上の数は偶数です',
+        style: TextStyle(
+          color: Colors.red,
+        ),
+      );
+    } else {
+      return const Text(
+        '上の数は奇数です',
+        style: TextStyle(
+          color: Colors.blue,
+        ),
+      );
+    }
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-          backgroundColor: Theme.of(context).colorScheme.inversePrimary,
-          title: const Row(
-            children: [
-              Icon(Icons.create),
-              Text('初めてのタイトル'),
-            ],
-          )),
+        backgroundColor: Theme.of(context).colorScheme.inversePrimary,
+        title: const Row(
+          children: [
+            Icon(
+              Icons.create,
+            ),
+            Text(
+              '初めてのタイトル',
+            ),
+          ],
+        ),
+      ),
       body: Column(
         children: [
-          const Text('HelloWolrd'),
-          const Text('ハローワールド'),
+          const Text(
+            'HelloWolrd',
+          ),
+          const Text(
+            'ハローワールド',
+          ),
+          Text(
+            'テキストボタンをクリックした回数：$_counter',
+          ),
+          // メソッドでWidgetを出し分ける
+          _showString(),
           TextButton(
-            onPressed: () => {},
-            child: const Text('テキストボタン'),
+            style: TextButton.styleFrom(
+              backgroundColor: Colors.limeAccent,
+              shape: const RoundedRectangleBorder(
+                borderRadius: BorderRadius.all(
+                  Radius.circular(100),
+                ),
+              ),
+              padding: const EdgeInsets.symmetric(
+                horizontal: 30,
+              ),
+            ),
+            onPressed: _incrementCounter,
+            child: const Text(
+              'テキストボタン',
+            ),
           ),
           const Row(
             mainAxisAlignment: MainAxisAlignment.spaceAround,
@@ -73,16 +131,22 @@ class _MyHomePageState extends State<MyHomePage> {
       ),
       floatingActionButton: FloatingActionButton(
         onPressed: () => {},
-        child: const Icon(Icons.timer),
+        child: const Icon(
+          Icons.timer,
+        ),
       ),
       drawer: const Drawer(
         child: Center(
-          child: Text('Drawer'),
+          child: Text(
+            'Drawer',
+          ),
         ),
       ),
       endDrawer: const Drawer(
         child: Center(
-          child: Text('EndDrawer'),
+          child: Text(
+            'EndDrawer',
+          ),
         ),
       ),
     );
