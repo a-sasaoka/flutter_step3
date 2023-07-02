@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_datetime_picker_plus/flutter_datetime_picker_plus.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
+import 'package:helloworld/time_to_live.dart';
 import 'package:url_launcher/url_launcher.dart';
 import 'package:flutter_localizations/flutter_localizations.dart';
 import 'package:intl/intl.dart';
@@ -47,6 +48,7 @@ class _MyHomePageState extends State<MyHomePage> {
   bool _flg = true;
   dynamic dateTime;
   dynamic dateFormat;
+  String _selectDuration = '1日';
 
   @override
   void initState() {
@@ -55,6 +57,7 @@ class _MyHomePageState extends State<MyHomePage> {
     _flg = true;
     dateTime = DateTime.now();
     dateFormat = DateFormat('yyyy年MM月dd日').format(dateTime);
+    _selectDuration = '1日';
   }
 
   void _incrementCounter() {
@@ -250,6 +253,23 @@ class _MyHomePageState extends State<MyHomePage> {
             child: const Text(
               'ドラム型で日付を選択',
             ),
+          ),
+          const SizedBox(
+            height: 32,
+          ),
+          DropdownButton(
+            value: _selectDuration,
+            items: TimeToLive.values.map((v) {
+              return DropdownMenuItem<String>(
+                value: v.name,
+                child: Text(v.name),
+              );
+            }).toList(),
+            onChanged: (data) {
+              setState(() {
+                _selectDuration = data.toString();
+              });
+            },
           ),
         ],
       ),
