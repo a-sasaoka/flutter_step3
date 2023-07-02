@@ -1,4 +1,9 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_datetime_picker_plus/flutter_datetime_picker_plus.dart';
+import 'package:font_awesome_flutter/font_awesome_flutter.dart';
+import 'package:url_launcher/url_launcher.dart';
+import 'package:flutter_localizations/flutter_localizations.dart';
+import 'package:intl/intl.dart';
 
 void main() {
   runApp(const MyApp());
@@ -20,6 +25,10 @@ class MyApp extends StatelessWidget {
       home: const MyHomePage(
         title: 'Flutter Demo Home Page',
       ),
+      localizationsDelegates: const [
+        GlobalMaterialLocalizations.delegate,
+        GlobalWidgetsLocalizations.delegate,
+      ],
     );
   }
 }
@@ -35,6 +44,18 @@ class MyHomePage extends StatefulWidget {
 
 class _MyHomePageState extends State<MyHomePage> {
   int _counter = 0;
+  bool _flg = true;
+  dynamic dateTime;
+  dynamic dateFormat;
+
+  @override
+  void initState() {
+    super.initState();
+    _counter = 0;
+    _flg = true;
+    dateTime = DateTime.now();
+    dateFormat = DateFormat('yyyy年MM月dd日').format(dateTime);
+  }
 
   void _incrementCounter() {
     setState(() {
@@ -58,6 +79,22 @@ class _MyHomePageState extends State<MyHomePage> {
           color: Colors.blue,
         ),
       );
+    }
+  }
+
+  // Flutter標準の日付選択
+  _datePicker(BuildContext context) async {
+    final DateTime? datePicked = await showDatePicker(
+      locale: const Locale('ja'),
+      context: context,
+      initialDate: dateTime,
+      firstDate: DateTime(1900, 1, 1),
+      lastDate: DateTime(2100, 12, 31),
+    );
+    if (datePicked != null && datePicked != dateTime) {
+      setState(() {
+        dateFormat = DateFormat('yyyy年MM月dd日').format(datePicked);
+      });
     }
   }
 
@@ -85,6 +122,9 @@ class _MyHomePageState extends State<MyHomePage> {
           const Text(
             'ハローワールド',
           ),
+          const SizedBox(
+            height: 32,
+          ),
           Text(
             'テキストボタンをクリックした回数：$_counter',
           ),
@@ -107,6 +147,9 @@ class _MyHomePageState extends State<MyHomePage> {
               'テキストボタン',
             ),
           ),
+          const SizedBox(
+            height: 32,
+          ),
           const Row(
             mainAxisAlignment: MainAxisAlignment.spaceAround,
             children: [
@@ -124,8 +167,89 @@ class _MyHomePageState extends State<MyHomePage> {
                 Icons.beach_access,
                 color: Colors.blue,
                 size: 36.0,
+              ),
+              Icon(
+                FontAwesomeIcons.gift,
+                color: Colors.teal,
               )
             ],
+          ),
+          const SizedBox(
+            height: 32,
+          ),
+          const Text(
+            'ブラウザでYahoo!を表示',
+          ),
+          IconButton(
+            icon: const Icon(
+              Icons.search,
+            ),
+            onPressed: () async {
+              Uri uri = Uri.https('www.yahoo.co.jp');
+
+              await launchUrl(
+                uri,
+                mode: LaunchMode.externalApplication,
+              );
+            },
+          ),
+          const SizedBox(
+            height: 32,
+          ),
+          // Widgetを重ねて表示
+          const Stack(
+            children: [
+              SizedBox(
+                child: LinearProgressIndicator(
+                  minHeight: 30,
+                  backgroundColor: Colors.blue,
+                  value: 0.3,
+                ),
+              ),
+              Align(
+                child: Text(
+                  '残り70%',
+                  style: TextStyle(
+                    fontSize: 20,
+                    color: Colors.white,
+                  ),
+                ),
+              )
+            ],
+          ),
+          const SizedBox(
+            height: 32,
+          ),
+          Text(
+            '$dateFormat',
+          ),
+          ElevatedButton(
+            onPressed: () {
+              _datePicker(context);
+            },
+            child: const Text(
+              '日付を選択',
+            ),
+          ),
+          ElevatedButton(
+            onPressed: () {
+              DatePicker.showDatePicker(
+                context,
+                showTitleActions: true,
+                minTime: DateTime(1900, 1, 1),
+                maxTime: DateTime(2049, 12, 31),
+                onConfirm: (date) {
+                  setState(() {
+                    dateFormat = DateFormat('yyyy年MM月dd日').format(date);
+                  });
+                },
+                currentTime: dateTime,
+                locale: LocaleType.jp,
+              );
+            },
+            child: const Text(
+              'ドラム型で日付を選択',
+            ),
           ),
         ],
       ),
@@ -142,13 +266,39 @@ class _MyHomePageState extends State<MyHomePage> {
           ),
         ),
       ),
-      endDrawer: const Drawer(
-        child: Center(
-          child: Text(
-            'EndDrawer',
+      endDrawer: Drawer(
+          child: ListView(
+        children: [
+          Container(
+            height: 64,
+            color: Colors.blue,
+            child: const Center(
+              child: Text(
+                'タイトル',
+                style: TextStyle(
+                  color: Colors.white,
+                  fontWeight: FontWeight.bold,
+                ),
+              ),
+            ),
           ),
-        ),
-      ),
+          SwitchListTile(
+            title: const Text(
+              '項目名',
+            ),
+            secondary: const Icon(
+              FontAwesomeIcons.gift,
+              color: Colors.teal,
+            ),
+            value: _flg,
+            onChanged: (bool value) => {
+              setState(() {
+                _flg = value;
+              })
+            },
+          ),
+        ],
+      )),
     );
   }
 }
