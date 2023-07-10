@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_datetime_picker_plus/flutter_datetime_picker_plus.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:helloworld/time_to_live.dart';
+import 'package:helloworld/web_view.dart';
 import 'package:url_launcher/url_launcher.dart';
 import 'package:flutter_localizations/flutter_localizations.dart';
 import 'package:intl/intl.dart';
@@ -195,6 +196,22 @@ class _MyHomePageState extends State<MyHomePage> {
                 mode: LaunchMode.externalApplication,
               );
             },
+          ),
+          const SizedBox(
+            height: 32,
+          ),
+          TextButton(
+            onPressed: () {
+              Navigator.push(
+                  context,
+                  MaterialPageRoute(
+                    fullscreenDialog: false,
+                    builder: (context) => const WebView('https://flutter.dev'),
+                  ));
+            },
+            child: const Text(
+              'WebView起動',
+            ),
           ),
           const SizedBox(
             height: 32,
