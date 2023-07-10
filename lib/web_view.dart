@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:webview_flutter/webview_flutter.dart';
 
 class WebView extends StatefulWidget {
@@ -60,10 +61,11 @@ class _WebView extends State<WebView> {
             color: Colors.lightBlue,
             child: SafeArea(
               child: Row(
+                mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                 children: [
                   IconButton(
-                    icon: const Icon(
-                      Icons.arrow_back,
+                    icon: const FaIcon(
+                      FontAwesomeIcons.caretLeft,
                     ),
                     color: Colors.white,
                     onPressed: () async {
@@ -71,8 +73,8 @@ class _WebView extends State<WebView> {
                     },
                   ),
                   IconButton(
-                    icon: const Icon(
-                      Icons.arrow_forward,
+                    icon: const FaIcon(
+                      FontAwesomeIcons.caretRight,
                     ),
                     color: Colors.white,
                     onPressed: () async {
