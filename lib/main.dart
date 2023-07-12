@@ -50,6 +50,7 @@ class _MyHomePageState extends State<MyHomePage> {
   dynamic dateTime;
   dynamic dateFormat;
   String _selectDuration = '1日';
+  String _initString = '初期値を設定';
 
   @override
   void initState() {
@@ -118,177 +119,294 @@ class _MyHomePageState extends State<MyHomePage> {
           ],
         ),
       ),
-      body: Column(
-        children: [
-          const Text(
-            'HelloWolrd',
-          ),
-          const Text(
-            'ハローワールド',
-          ),
-          const SizedBox(
-            height: 32,
-          ),
-          Text(
-            'テキストボタンをクリックした回数：$_counter',
-          ),
-          // メソッドでWidgetを出し分ける
-          _showString(),
-          TextButton(
-            style: TextButton.styleFrom(
-              backgroundColor: Colors.limeAccent,
-              shape: const RoundedRectangleBorder(
-                borderRadius: BorderRadius.all(
-                  Radius.circular(100),
-                ),
-              ),
-              padding: const EdgeInsets.symmetric(
-                horizontal: 30,
-              ),
+      body: SingleChildScrollView(
+        child: Column(
+          children: [
+            const Text(
+              'HelloWolrd',
             ),
-            onPressed: _incrementCounter,
-            child: const Text(
-              'テキストボタン',
+            const Text(
+              'ハローワールド',
             ),
-          ),
-          const SizedBox(
-            height: 32,
-          ),
-          const Row(
-            mainAxisAlignment: MainAxisAlignment.spaceAround,
-            children: [
-              Icon(
-                Icons.favorite,
-                color: Colors.pink,
-                size: 24.0,
-              ),
-              Icon(
-                Icons.audiotrack,
-                color: Colors.green,
-                size: 30.0,
-              ),
-              Icon(
-                Icons.beach_access,
-                color: Colors.blue,
-                size: 36.0,
-              ),
-              Icon(
-                FontAwesomeIcons.gift,
-                color: Colors.teal,
-              )
-            ],
-          ),
-          const SizedBox(
-            height: 32,
-          ),
-          const Text(
-            'ブラウザでYahoo!を表示',
-          ),
-          IconButton(
-            icon: const Icon(
-              Icons.search,
+            const SizedBox(
+              height: 16,
             ),
-            onPressed: () async {
-              Uri uri = Uri.https('www.yahoo.co.jp');
-
-              await launchUrl(
-                uri,
-                mode: LaunchMode.externalApplication,
-              );
-            },
-          ),
-          const SizedBox(
-            height: 32,
-          ),
-          TextButton(
-            onPressed: () {
-              Navigator.push(
-                  context,
-                  MaterialPageRoute(
-                    fullscreenDialog: false,
-                    builder: (context) => const WebView('https://flutter.dev'),
-                  ));
-            },
-            child: const Text(
-              'WebView起動',
+            Container(
+              color: Colors.grey,
+              height: 1,
             ),
-          ),
-          const SizedBox(
-            height: 32,
-          ),
-          // Widgetを重ねて表示
-          const Stack(
-            children: [
-              SizedBox(
-                child: LinearProgressIndicator(
-                  minHeight: 30,
-                  backgroundColor: Colors.blue,
-                  value: 0.3,
-                ),
-              ),
-              Align(
-                child: Text(
-                  '残り70%',
-                  style: TextStyle(
-                    fontSize: 20,
-                    color: Colors.white,
+            const SizedBox(
+              height: 16,
+            ),
+            Text(
+              'テキストボタンをクリックした回数：$_counter',
+            ),
+            // メソッドでWidgetを出し分ける
+            _showString(),
+            TextButton(
+              style: TextButton.styleFrom(
+                backgroundColor: Colors.limeAccent,
+                shape: const RoundedRectangleBorder(
+                  borderRadius: BorderRadius.all(
+                    Radius.circular(100),
                   ),
                 ),
-              )
-            ],
-          ),
-          const SizedBox(
-            height: 32,
-          ),
-          Text(
-            '$dateFormat',
-          ),
-          ElevatedButton(
-            onPressed: () {
-              _datePicker(context);
-            },
-            child: const Text(
-              '日付を選択',
+                padding: const EdgeInsets.symmetric(
+                  horizontal: 30,
+                ),
+              ),
+              onPressed: _incrementCounter,
+              child: const Text(
+                'テキストボタン',
+              ),
             ),
-          ),
-          ElevatedButton(
-            onPressed: () {
-              DatePicker.showDatePicker(
-                context,
-                showTitleActions: true,
-                minTime: DateTime(1900, 1, 1),
-                maxTime: DateTime(2049, 12, 31),
-                onConfirm: (date) {
-                  setState(() {
-                    dateFormat = DateFormat('yyyy年MM月dd日').format(date);
-                  });
-                },
-                currentTime: dateTime,
-                locale: LocaleType.jp,
-              );
-            },
-            child: const Text(
-              'ドラム型で日付を選択',
+            const SizedBox(
+              height: 16,
             ),
-          ),
-          const SizedBox(
-            height: 32,
-          ),
-          DropdownButton(
-            value: _selectDuration,
-            items: TimeToLive.values.map((v) {
-              return DropdownMenuItem<String>(
-                value: v.name,
-                child: Text(v.name),
-              );
-            }).toList(),
-            onChanged: (data) {
-              setState(() {
-                _selectDuration = data.toString();
-              });
-            },
-          ),
-        ],
+            Container(
+              color: Colors.grey,
+              height: 1,
+            ),
+            const SizedBox(
+              height: 16,
+            ),
+            const Row(
+              mainAxisAlignment: MainAxisAlignment.spaceAround,
+              children: [
+                Icon(
+                  Icons.favorite,
+                  color: Colors.pink,
+                  size: 24.0,
+                ),
+                Icon(
+                  Icons.audiotrack,
+                  color: Colors.green,
+                  size: 30.0,
+                ),
+                Icon(
+                  Icons.beach_access,
+                  color: Colors.blue,
+                  size: 36.0,
+                ),
+                Icon(
+                  FontAwesomeIcons.gift,
+                  color: Colors.teal,
+                )
+              ],
+            ),
+            const SizedBox(
+              height: 16,
+            ),
+            Container(
+              color: Colors.grey,
+              height: 1,
+            ),
+            const SizedBox(
+              height: 16,
+            ),
+            const Text(
+              'ブラウザでYahoo!を表示',
+            ),
+            IconButton(
+              icon: const Icon(
+                Icons.search,
+              ),
+              onPressed: () async {
+                Uri uri = Uri.https('www.yahoo.co.jp');
+
+                await launchUrl(
+                  uri,
+                  mode: LaunchMode.externalApplication,
+                );
+              },
+            ),
+            const SizedBox(
+              height: 16,
+            ),
+            Container(
+              color: Colors.grey,
+              height: 1,
+            ),
+            const SizedBox(
+              height: 16,
+            ),
+            TextButton(
+              onPressed: () {
+                Navigator.push(
+                    context,
+                    MaterialPageRoute(
+                      fullscreenDialog: false,
+                      builder: (context) =>
+                          const WebView('https://flutter.dev'),
+                    ));
+              },
+              child: const Text(
+                'WebView起動',
+              ),
+            ),
+            const SizedBox(
+              height: 16,
+            ),
+            Container(
+              color: Colors.grey,
+              height: 1,
+            ),
+            const SizedBox(
+              height: 16,
+            ),
+            // Widgetを重ねて表示
+            const Stack(
+              children: [
+                SizedBox(
+                  child: LinearProgressIndicator(
+                    minHeight: 30,
+                    backgroundColor: Colors.blue,
+                    value: 0.3,
+                  ),
+                ),
+                Align(
+                  child: Text(
+                    '残り70%',
+                    style: TextStyle(
+                      fontSize: 20,
+                      color: Colors.white,
+                    ),
+                  ),
+                )
+              ],
+            ),
+            const SizedBox(
+              height: 16,
+            ),
+            Container(
+              color: Colors.grey,
+              height: 1,
+            ),
+            const SizedBox(
+              height: 16,
+            ),
+            Text(
+              '$dateFormat',
+            ),
+            ElevatedButton(
+              onPressed: () {
+                _datePicker(context);
+              },
+              child: const Text(
+                '日付を選択',
+              ),
+            ),
+            ElevatedButton(
+              onPressed: () {
+                DatePicker.showDatePicker(
+                  context,
+                  showTitleActions: true,
+                  minTime: DateTime(1900, 1, 1),
+                  maxTime: DateTime(2049, 12, 31),
+                  onConfirm: (date) {
+                    setState(() {
+                      dateFormat = DateFormat('yyyy年MM月dd日').format(date);
+                    });
+                  },
+                  currentTime: dateTime,
+                  locale: LocaleType.jp,
+                );
+              },
+              child: const Text(
+                'ドラム型で日付を選択',
+              ),
+            ),
+            const SizedBox(
+              height: 16,
+            ),
+            Container(
+              color: Colors.grey,
+              height: 1,
+            ),
+            const SizedBox(
+              height: 16,
+            ),
+            DropdownButton(
+              value: _selectDuration,
+              items: TimeToLive.values.map((v) {
+                return DropdownMenuItem<String>(
+                  value: v.name,
+                  child: Text(v.name),
+                );
+              }).toList(),
+              onChanged: (data) {
+                setState(() {
+                  _selectDuration = data.toString();
+                });
+              },
+            ),
+            const SizedBox(
+              height: 16,
+            ),
+            Container(
+              color: Colors.grey,
+              height: 1,
+            ),
+            const SizedBox(
+              height: 16,
+            ),
+            SizedBox(
+              width: 256,
+              child: TextField(
+                controller: TextEditingController(
+                  text: _initString,
+                ),
+                decoration: const InputDecoration(
+                  labelText: '何かを入力するフィールド',
+                  border: UnderlineInputBorder(),
+                  hintText: '何か入力してください',
+                  helperText: '何を入力しても大丈夫です',
+                ),
+                keyboardType: TextInputType.text,
+                maxLength: 10,
+              ),
+            ),
+            const SizedBox(
+              height: 8,
+            ),
+            TextButton(
+              onPressed: () {
+                setState(() {
+                  _initString = '';
+                });
+              },
+              style: TextButton.styleFrom(
+                backgroundColor: Colors.blue,
+                shape: const RoundedRectangleBorder(
+                  borderRadius: BorderRadius.all(
+                    Radius.circular(100),
+                  ),
+                ),
+                fixedSize: const Size(96, 32),
+              ),
+              child: const Text(
+                'クリア',
+                style: TextStyle(
+                  color: Colors.white,
+                  fontWeight: FontWeight.bold,
+                ),
+              ),
+            ),
+            const SizedBox(
+              height: 16,
+            ),
+            Container(
+              color: Colors.grey,
+              height: 1,
+            ),
+            const SizedBox(
+              height: 16,
+            ),
+            const SizedBox(
+              height: 128,
+            ),
+          ],
+        ),
       ),
       floatingActionButton: FloatingActionButton(
         onPressed: () => {},
@@ -304,38 +422,39 @@ class _MyHomePageState extends State<MyHomePage> {
         ),
       ),
       endDrawer: Drawer(
-          child: ListView(
-        children: [
-          Container(
-            height: 64,
-            color: Colors.blue,
-            child: const Center(
-              child: Text(
-                'タイトル',
-                style: TextStyle(
-                  color: Colors.white,
-                  fontWeight: FontWeight.bold,
+        child: ListView(
+          children: [
+            Container(
+              height: 64,
+              color: Colors.blue,
+              child: const Center(
+                child: Text(
+                  'タイトル',
+                  style: TextStyle(
+                    color: Colors.white,
+                    fontWeight: FontWeight.bold,
+                  ),
                 ),
               ),
             ),
-          ),
-          SwitchListTile(
-            title: const Text(
-              '項目名',
+            SwitchListTile(
+              title: const Text(
+                '項目名',
+              ),
+              secondary: const Icon(
+                FontAwesomeIcons.gift,
+                color: Colors.teal,
+              ),
+              value: _flg,
+              onChanged: (bool value) => {
+                setState(() {
+                  _flg = value;
+                })
+              },
             ),
-            secondary: const Icon(
-              FontAwesomeIcons.gift,
-              color: Colors.teal,
-            ),
-            value: _flg,
-            onChanged: (bool value) => {
-              setState(() {
-                _flg = value;
-              })
-            },
-          ),
-        ],
-      )),
+          ],
+        ),
+      ),
     );
   }
 }

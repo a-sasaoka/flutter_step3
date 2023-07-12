@@ -74,6 +74,15 @@ class _WebView extends State<WebView> {
                   ),
                   IconButton(
                     icon: const FaIcon(
+                      FontAwesomeIcons.rotateRight,
+                    ),
+                    color: Colors.white,
+                    onPressed: () async {
+                      _controller.reload();
+                    },
+                  ),
+                  IconButton(
+                    icon: const FaIcon(
                       FontAwesomeIcons.caretRight,
                     ),
                     color: Colors.white,
