@@ -1,8 +1,10 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_datetime_picker_plus/flutter_datetime_picker_plus.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
+import 'package:helloworld/qr_reader.dart';
 import 'package:helloworld/time_to_live.dart';
 import 'package:helloworld/web_view.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 import 'package:url_launcher/url_launcher.dart';
 import 'package:flutter_localizations/flutter_localizations.dart';
 import 'package:intl/intl.dart';
@@ -45,12 +47,19 @@ class MyHomePage extends StatefulWidget {
 }
 
 class _MyHomePageState extends State<MyHomePage> {
+  final Future<SharedPreferences> _prefs = SharedPreferences.getInstance();
+  String _initString = '';
+
   int _counter = 0;
   bool _flg = true;
   dynamic dateTime;
   dynamic dateFormat;
   String _selectDuration = '1日';
-  String _initString = '初期値を設定';
+  final FocusNode _focusNode2 = FocusNode();
+  final FocusNode _focusNode3 = FocusNode();
+  final FocusNode _focusNode4 = FocusNode();
+  final FocusNode _focusNode5 = FocusNode();
+  final FocusNode _focusNode6 = FocusNode();
 
   @override
   void initState() {
@@ -60,6 +69,21 @@ class _MyHomePageState extends State<MyHomePage> {
     dateTime = DateTime.now();
     dateFormat = DateFormat('yyyy年MM月dd日').format(dateTime);
     _selectDuration = '1日';
+    _init();
+  }
+
+  Future<void> _init() async {
+    final SharedPreferences prefs = await _prefs;
+
+    setState(() {
+      _initString = prefs.getString('key') ?? '';
+    });
+  }
+
+  Future<void> _save() async {
+    final SharedPreferences prefs = await _prefs;
+
+    prefs.setString('key', _initString);
   }
 
   void _incrementCounter() {
@@ -233,12 +257,12 @@ class _MyHomePageState extends State<MyHomePage> {
             TextButton(
               onPressed: () {
                 Navigator.push(
-                    context,
-                    MaterialPageRoute(
-                      fullscreenDialog: false,
-                      builder: (context) =>
-                          const WebView('https://flutter.dev'),
-                    ));
+                  context,
+                  MaterialPageRoute(
+                    fullscreenDialog: false,
+                    builder: (context) => const WebView('https://flutter.dev'),
+                  ),
+                );
               },
               child: const Text(
                 'WebView起動',
@@ -364,33 +388,62 @@ class _MyHomePageState extends State<MyHomePage> {
                 ),
                 keyboardType: TextInputType.text,
                 maxLength: 10,
+                onChanged: (value) {
+                  _initString = value;
+                },
               ),
             ),
             const SizedBox(
               height: 8,
             ),
-            TextButton(
-              onPressed: () {
-                setState(() {
-                  _initString = '';
-                });
-              },
-              style: TextButton.styleFrom(
-                backgroundColor: Colors.blue,
-                shape: const RoundedRectangleBorder(
-                  borderRadius: BorderRadius.all(
-                    Radius.circular(100),
+            Row(
+              mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+              children: [
+                TextButton(
+                  onPressed: () {
+                    _save();
+                  },
+                  style: TextButton.styleFrom(
+                    backgroundColor: Colors.blue,
+                    shape: const RoundedRectangleBorder(
+                      borderRadius: BorderRadius.all(
+                        Radius.circular(100),
+                      ),
+                    ),
+                    fixedSize: const Size(96, 32),
+                  ),
+                  child: const Text(
+                    '保存',
+                    style: TextStyle(
+                      color: Colors.white,
+                      fontWeight: FontWeight.bold,
+                    ),
                   ),
                 ),
-                fixedSize: const Size(96, 32),
-              ),
-              child: const Text(
-                'クリア',
-                style: TextStyle(
-                  color: Colors.white,
-                  fontWeight: FontWeight.bold,
+                TextButton(
+                  onPressed: () {
+                    setState(() {
+                      _initString = '';
+                    });
+                  },
+                  style: TextButton.styleFrom(
+                    backgroundColor: Colors.blue,
+                    shape: const RoundedRectangleBorder(
+                      borderRadius: BorderRadius.all(
+                        Radius.circular(100),
+                      ),
+                    ),
+                    fixedSize: const Size(96, 32),
+                  ),
+                  child: const Text(
+                    'クリア',
+                    style: TextStyle(
+                      color: Colors.white,
+                      fontWeight: FontWeight.bold,
+                    ),
+                  ),
                 ),
-              ),
+              ],
             ),
             const SizedBox(
               height: 16,
@@ -402,6 +455,129 @@ class _MyHomePageState extends State<MyHomePage> {
             const SizedBox(
               height: 16,
             ),
+            const Text(
+              '1文字入力すると次に移動',
+            ),
+            Row(
+              mainAxisAlignment: MainAxisAlignment.center,
+              children: [
+                SizedBox(
+                  width: 48,
+                  child: TextField(
+                    textAlign: TextAlign.center,
+                    decoration: const InputDecoration(
+                      border: OutlineInputBorder(),
+                    ),
+                    keyboardType: TextInputType.number,
+                    onChanged: (value) {
+                      if (value.length == 1) {
+                        _focusNode2.requestFocus();
+                      }
+                    },
+                  ),
+                ),
+                SizedBox(
+                  width: 48,
+                  child: TextField(
+                    textAlign: TextAlign.center,
+                    focusNode: _focusNode2,
+                    decoration: const InputDecoration(
+                      border: OutlineInputBorder(),
+                    ),
+                    keyboardType: TextInputType.number,
+                    onChanged: (value) {
+                      if (value.length == 1) {
+                        _focusNode3.requestFocus();
+                      }
+                    },
+                  ),
+                ),
+                SizedBox(
+                  width: 48,
+                  child: TextField(
+                    textAlign: TextAlign.center,
+                    focusNode: _focusNode3,
+                    decoration: const InputDecoration(
+                      border: OutlineInputBorder(),
+                    ),
+                    keyboardType: TextInputType.number,
+                    onChanged: (value) {
+                      if (value.length == 1) {
+                        _focusNode4.requestFocus();
+                      }
+                    },
+                  ),
+                ),
+                SizedBox(
+                  width: 48,
+                  child: TextField(
+                    textAlign: TextAlign.center,
+                    focusNode: _focusNode4,
+                    decoration: const InputDecoration(
+                      border: OutlineInputBorder(),
+                    ),
+                    keyboardType: TextInputType.number,
+                    onChanged: (value) {
+                      if (value.length == 1) {
+                        _focusNode5.requestFocus();
+                      }
+                    },
+                  ),
+                ),
+                SizedBox(
+                  width: 48,
+                  child: TextField(
+                    textAlign: TextAlign.center,
+                    focusNode: _focusNode5,
+                    decoration: const InputDecoration(
+                      border: OutlineInputBorder(),
+                    ),
+                    keyboardType: TextInputType.number,
+                    onChanged: (value) {
+                      if (value.length == 1) {
+                        _focusNode6.requestFocus();
+                      }
+                    },
+                  ),
+                ),
+                SizedBox(
+                  width: 48,
+                  child: TextField(
+                    textAlign: TextAlign.center,
+                    focusNode: _focusNode6,
+                    decoration: const InputDecoration(
+                      border: OutlineInputBorder(),
+                    ),
+                    keyboardType: TextInputType.number,
+                  ),
+                ),
+              ],
+            ),
+            const SizedBox(
+              height: 16,
+            ),
+            Container(
+              color: Colors.grey,
+              height: 1,
+            ),
+            const SizedBox(
+              height: 16,
+            ),
+            TextButton(
+              onPressed: () {
+                Navigator.push(
+                  context,
+                  MaterialPageRoute(
+                    fullscreenDialog: false,
+                    builder: (context) => const QRReader(),
+                  ),
+                );
+              },
+              child: const Text(
+                'QRコード読み込み',
+              ),
+            ),
+
             const SizedBox(
               height: 128,
             ),
