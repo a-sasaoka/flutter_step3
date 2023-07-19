@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_datetime_picker_plus/flutter_datetime_picker_plus.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:helloworld/qr_reader.dart';
+import 'package:helloworld/qr_reader2.dart';
 import 'package:helloworld/time_to_live.dart';
 import 'package:helloworld/web_view.dart';
 import 'package:shared_preferences/shared_preferences.dart';
@@ -60,6 +61,8 @@ class _MyHomePageState extends State<MyHomePage> {
   final FocusNode _focusNode4 = FocusNode();
   final FocusNode _focusNode5 = FocusNode();
   final FocusNode _focusNode6 = FocusNode();
+  String _result = '';
+  String _result2 = '';
 
   @override
   void initState() {
@@ -84,6 +87,12 @@ class _MyHomePageState extends State<MyHomePage> {
     final SharedPreferences prefs = await _prefs;
 
     prefs.setString('key', _initString);
+  }
+
+  Future<void> _clear() async {
+    final SharedPreferences prefs = await _prefs;
+
+    prefs.remove('key');
   }
 
   void _incrementCounter() {
@@ -143,445 +152,539 @@ class _MyHomePageState extends State<MyHomePage> {
           ],
         ),
       ),
-      body: SingleChildScrollView(
-        child: Column(
-          children: [
-            const Text(
-              'HelloWolrd',
-            ),
-            const Text(
-              'ハローワールド',
-            ),
-            const SizedBox(
-              height: 16,
-            ),
-            Container(
-              color: Colors.grey,
-              height: 1,
-            ),
-            const SizedBox(
-              height: 16,
-            ),
-            Text(
-              'テキストボタンをクリックした回数：$_counter',
-            ),
-            // メソッドでWidgetを出し分ける
-            _showString(),
-            TextButton(
-              style: TextButton.styleFrom(
-                backgroundColor: Colors.limeAccent,
-                shape: const RoundedRectangleBorder(
-                  borderRadius: BorderRadius.all(
-                    Radius.circular(100),
-                  ),
-                ),
-                padding: const EdgeInsets.symmetric(
-                  horizontal: 30,
-                ),
+      body: SafeArea(
+        child: SingleChildScrollView(
+          child: Column(
+            children: [
+              const Text(
+                'HelloWolrd',
               ),
-              onPressed: _incrementCounter,
-              child: const Text(
-                'テキストボタン',
+              const Text(
+                'ハローワールド',
               ),
-            ),
-            const SizedBox(
-              height: 16,
-            ),
-            Container(
-              color: Colors.grey,
-              height: 1,
-            ),
-            const SizedBox(
-              height: 16,
-            ),
-            const Row(
-              mainAxisAlignment: MainAxisAlignment.spaceAround,
-              children: [
-                Icon(
-                  Icons.favorite,
-                  color: Colors.pink,
-                  size: 24.0,
-                ),
-                Icon(
-                  Icons.audiotrack,
-                  color: Colors.green,
-                  size: 30.0,
-                ),
-                Icon(
-                  Icons.beach_access,
-                  color: Colors.blue,
-                  size: 36.0,
-                ),
-                Icon(
-                  FontAwesomeIcons.gift,
-                  color: Colors.teal,
-                )
-              ],
-            ),
-            const SizedBox(
-              height: 16,
-            ),
-            Container(
-              color: Colors.grey,
-              height: 1,
-            ),
-            const SizedBox(
-              height: 16,
-            ),
-            const Text(
-              'ブラウザでYahoo!を表示',
-            ),
-            IconButton(
-              icon: const Icon(
-                Icons.search,
+              const SizedBox(
+                height: 16,
               ),
-              onPressed: () async {
-                Uri uri = Uri.https('www.yahoo.co.jp');
-
-                await launchUrl(
-                  uri,
-                  mode: LaunchMode.externalApplication,
-                );
-              },
-            ),
-            const SizedBox(
-              height: 16,
-            ),
-            Container(
-              color: Colors.grey,
-              height: 1,
-            ),
-            const SizedBox(
-              height: 16,
-            ),
-            TextButton(
-              onPressed: () {
-                Navigator.push(
-                  context,
-                  MaterialPageRoute(
-                    fullscreenDialog: false,
-                    builder: (context) => const WebView('https://flutter.dev'),
-                  ),
-                );
-              },
-              child: const Text(
-                'WebView起動',
+              Container(
+                color: Colors.grey,
+                height: 1,
               ),
-            ),
-            const SizedBox(
-              height: 16,
-            ),
-            Container(
-              color: Colors.grey,
-              height: 1,
-            ),
-            const SizedBox(
-              height: 16,
-            ),
-            // Widgetを重ねて表示
-            const Stack(
-              children: [
-                SizedBox(
-                  child: LinearProgressIndicator(
-                    minHeight: 30,
-                    backgroundColor: Colors.blue,
-                    value: 0.3,
-                  ),
-                ),
-                Align(
-                  child: Text(
-                    '残り70%',
-                    style: TextStyle(
-                      fontSize: 20,
-                      color: Colors.white,
+              const SizedBox(
+                height: 16,
+              ),
+              Text(
+                'テキストボタンをクリックした回数：$_counter',
+              ),
+              // メソッドでWidgetを出し分ける
+              _showString(),
+              TextButton(
+                style: TextButton.styleFrom(
+                  backgroundColor: Colors.limeAccent,
+                  shape: const RoundedRectangleBorder(
+                    borderRadius: BorderRadius.all(
+                      Radius.circular(100),
                     ),
                   ),
-                )
-              ],
-            ),
-            const SizedBox(
-              height: 16,
-            ),
-            Container(
-              color: Colors.grey,
-              height: 1,
-            ),
-            const SizedBox(
-              height: 16,
-            ),
-            Text(
-              '$dateFormat',
-            ),
-            ElevatedButton(
-              onPressed: () {
-                _datePicker(context);
-              },
-              child: const Text(
-                '日付を選択',
-              ),
-            ),
-            ElevatedButton(
-              onPressed: () {
-                DatePicker.showDatePicker(
-                  context,
-                  showTitleActions: true,
-                  minTime: DateTime(1900, 1, 1),
-                  maxTime: DateTime(2049, 12, 31),
-                  onConfirm: (date) {
-                    setState(() {
-                      dateFormat = DateFormat('yyyy年MM月dd日').format(date);
-                    });
-                  },
-                  currentTime: dateTime,
-                  locale: LocaleType.jp,
-                );
-              },
-              child: const Text(
-                'ドラム型で日付を選択',
-              ),
-            ),
-            const SizedBox(
-              height: 16,
-            ),
-            Container(
-              color: Colors.grey,
-              height: 1,
-            ),
-            const SizedBox(
-              height: 16,
-            ),
-            DropdownButton(
-              value: _selectDuration,
-              items: TimeToLive.values.map((v) {
-                return DropdownMenuItem<String>(
-                  value: v.name,
-                  child: Text(v.name),
-                );
-              }).toList(),
-              onChanged: (data) {
-                setState(() {
-                  _selectDuration = data.toString();
-                });
-              },
-            ),
-            const SizedBox(
-              height: 16,
-            ),
-            Container(
-              color: Colors.grey,
-              height: 1,
-            ),
-            const SizedBox(
-              height: 16,
-            ),
-            SizedBox(
-              width: 256,
-              child: TextField(
-                controller: TextEditingController(
-                  text: _initString,
+                  padding: const EdgeInsets.symmetric(
+                    horizontal: 30,
+                  ),
                 ),
-                decoration: const InputDecoration(
-                  labelText: '何かを入力するフィールド',
-                  border: UnderlineInputBorder(),
-                  hintText: '何か入力してください',
-                  helperText: '何を入力しても大丈夫です',
+                onPressed: _incrementCounter,
+                child: const Text(
+                  'テキストボタン',
                 ),
-                keyboardType: TextInputType.text,
-                maxLength: 10,
-                onChanged: (value) {
-                  _initString = value;
+              ),
+              const SizedBox(
+                height: 16,
+              ),
+              Container(
+                color: Colors.grey,
+                height: 1,
+              ),
+              const SizedBox(
+                height: 16,
+              ),
+              const Row(
+                mainAxisAlignment: MainAxisAlignment.spaceAround,
+                children: [
+                  Icon(
+                    Icons.favorite,
+                    color: Colors.pink,
+                    size: 24.0,
+                  ),
+                  Icon(
+                    Icons.audiotrack,
+                    color: Colors.green,
+                    size: 30.0,
+                  ),
+                  Icon(
+                    Icons.beach_access,
+                    color: Colors.blue,
+                    size: 36.0,
+                  ),
+                  Icon(
+                    FontAwesomeIcons.gift,
+                    color: Colors.teal,
+                  )
+                ],
+              ),
+              const SizedBox(
+                height: 16,
+              ),
+              Container(
+                color: Colors.grey,
+                height: 1,
+              ),
+              const SizedBox(
+                height: 16,
+              ),
+              const Text(
+                'ブラウザでYahoo!を表示',
+              ),
+              IconButton(
+                icon: const Icon(
+                  Icons.search,
+                ),
+                onPressed: () async {
+                  Uri uri = Uri.https('www.yahoo.co.jp');
+
+                  await launchUrl(
+                    uri,
+                    mode: LaunchMode.externalApplication,
+                  );
                 },
               ),
-            ),
-            const SizedBox(
-              height: 8,
-            ),
-            Row(
-              mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-              children: [
-                TextButton(
-                  onPressed: () {
-                    _save();
-                  },
-                  style: TextButton.styleFrom(
-                    backgroundColor: Colors.blue,
-                    shape: const RoundedRectangleBorder(
-                      borderRadius: BorderRadius.all(
-                        Radius.circular(100),
-                      ),
-                    ),
-                    fixedSize: const Size(96, 32),
-                  ),
-                  child: const Text(
-                    '保存',
-                    style: TextStyle(
-                      color: Colors.white,
-                      fontWeight: FontWeight.bold,
-                    ),
-                  ),
-                ),
-                TextButton(
-                  onPressed: () {
-                    setState(() {
-                      _initString = '';
-                    });
-                  },
-                  style: TextButton.styleFrom(
-                    backgroundColor: Colors.blue,
-                    shape: const RoundedRectangleBorder(
-                      borderRadius: BorderRadius.all(
-                        Radius.circular(100),
-                      ),
-                    ),
-                    fixedSize: const Size(96, 32),
-                  ),
-                  child: const Text(
-                    'クリア',
-                    style: TextStyle(
-                      color: Colors.white,
-                      fontWeight: FontWeight.bold,
-                    ),
-                  ),
-                ),
-              ],
-            ),
-            const SizedBox(
-              height: 16,
-            ),
-            Container(
-              color: Colors.grey,
-              height: 1,
-            ),
-            const SizedBox(
-              height: 16,
-            ),
-            const Text(
-              '1文字入力すると次に移動',
-            ),
-            Row(
-              mainAxisAlignment: MainAxisAlignment.center,
-              children: [
-                SizedBox(
-                  width: 48,
-                  child: TextField(
-                    textAlign: TextAlign.center,
-                    decoration: const InputDecoration(
-                      border: OutlineInputBorder(),
-                    ),
-                    keyboardType: TextInputType.number,
-                    onChanged: (value) {
-                      if (value.length == 1) {
-                        _focusNode2.requestFocus();
-                      }
-                    },
-                  ),
-                ),
-                SizedBox(
-                  width: 48,
-                  child: TextField(
-                    textAlign: TextAlign.center,
-                    focusNode: _focusNode2,
-                    decoration: const InputDecoration(
-                      border: OutlineInputBorder(),
-                    ),
-                    keyboardType: TextInputType.number,
-                    onChanged: (value) {
-                      if (value.length == 1) {
-                        _focusNode3.requestFocus();
-                      }
-                    },
-                  ),
-                ),
-                SizedBox(
-                  width: 48,
-                  child: TextField(
-                    textAlign: TextAlign.center,
-                    focusNode: _focusNode3,
-                    decoration: const InputDecoration(
-                      border: OutlineInputBorder(),
-                    ),
-                    keyboardType: TextInputType.number,
-                    onChanged: (value) {
-                      if (value.length == 1) {
-                        _focusNode4.requestFocus();
-                      }
-                    },
-                  ),
-                ),
-                SizedBox(
-                  width: 48,
-                  child: TextField(
-                    textAlign: TextAlign.center,
-                    focusNode: _focusNode4,
-                    decoration: const InputDecoration(
-                      border: OutlineInputBorder(),
-                    ),
-                    keyboardType: TextInputType.number,
-                    onChanged: (value) {
-                      if (value.length == 1) {
-                        _focusNode5.requestFocus();
-                      }
-                    },
-                  ),
-                ),
-                SizedBox(
-                  width: 48,
-                  child: TextField(
-                    textAlign: TextAlign.center,
-                    focusNode: _focusNode5,
-                    decoration: const InputDecoration(
-                      border: OutlineInputBorder(),
-                    ),
-                    keyboardType: TextInputType.number,
-                    onChanged: (value) {
-                      if (value.length == 1) {
-                        _focusNode6.requestFocus();
-                      }
-                    },
-                  ),
-                ),
-                SizedBox(
-                  width: 48,
-                  child: TextField(
-                    textAlign: TextAlign.center,
-                    focusNode: _focusNode6,
-                    decoration: const InputDecoration(
-                      border: OutlineInputBorder(),
-                    ),
-                    keyboardType: TextInputType.number,
-                  ),
-                ),
-              ],
-            ),
-            const SizedBox(
-              height: 16,
-            ),
-            Container(
-              color: Colors.grey,
-              height: 1,
-            ),
-            const SizedBox(
-              height: 16,
-            ),
-            TextButton(
-              onPressed: () {
-                Navigator.push(
-                  context,
-                  MaterialPageRoute(
-                    fullscreenDialog: false,
-                    builder: (context) => const QRReader(),
-                  ),
-                );
-              },
-              child: const Text(
-                'QRコード読み込み',
+              const SizedBox(
+                height: 16,
               ),
-            ),
+              Container(
+                color: Colors.grey,
+                height: 1,
+              ),
+              const SizedBox(
+                height: 16,
+              ),
+              TextButton(
+                onPressed: () {
+                  Navigator.push(
+                    context,
+                    MaterialPageRoute(
+                      fullscreenDialog: false,
+                      builder: (context) =>
+                          const WebView('https://flutter.dev'),
+                    ),
+                  );
+                },
+                child: const Text(
+                  'WebView起動',
+                ),
+              ),
+              const SizedBox(
+                height: 16,
+              ),
+              Container(
+                color: Colors.grey,
+                height: 1,
+              ),
+              const SizedBox(
+                height: 16,
+              ),
+              // Widgetを重ねて表示
+              const Stack(
+                children: [
+                  SizedBox(
+                    child: LinearProgressIndicator(
+                      minHeight: 30,
+                      backgroundColor: Colors.blue,
+                      value: 0.3,
+                    ),
+                  ),
+                  Align(
+                    child: Text(
+                      '残り70%',
+                      style: TextStyle(
+                        fontSize: 20,
+                        color: Colors.white,
+                      ),
+                    ),
+                  )
+                ],
+              ),
+              const SizedBox(
+                height: 16,
+              ),
+              Container(
+                color: Colors.grey,
+                height: 1,
+              ),
+              const SizedBox(
+                height: 16,
+              ),
+              Text(
+                '$dateFormat',
+              ),
+              ElevatedButton(
+                onPressed: () {
+                  _datePicker(context);
+                },
+                child: const Text(
+                  '日付を選択',
+                ),
+              ),
+              ElevatedButton(
+                onPressed: () {
+                  DatePicker.showDatePicker(
+                    context,
+                    showTitleActions: true,
+                    minTime: DateTime(1900, 1, 1),
+                    maxTime: DateTime(2049, 12, 31),
+                    onConfirm: (date) {
+                      setState(() {
+                        dateFormat = DateFormat('yyyy年MM月dd日').format(date);
+                      });
+                    },
+                    currentTime: dateTime,
+                    locale: LocaleType.jp,
+                  );
+                },
+                child: const Text(
+                  'ドラム型で日付を選択',
+                ),
+              ),
+              const SizedBox(
+                height: 16,
+              ),
+              Container(
+                color: Colors.grey,
+                height: 1,
+              ),
+              const SizedBox(
+                height: 16,
+              ),
+              DropdownButton(
+                value: _selectDuration,
+                items: TimeToLive.values.map((v) {
+                  return DropdownMenuItem<String>(
+                    value: v.name,
+                    child: Text(v.name),
+                  );
+                }).toList(),
+                onChanged: (data) {
+                  setState(() {
+                    _selectDuration = data.toString();
+                  });
+                },
+              ),
+              const SizedBox(
+                height: 16,
+              ),
+              Container(
+                color: Colors.grey,
+                height: 1,
+              ),
+              const SizedBox(
+                height: 16,
+              ),
+              SizedBox(
+                width: 256,
+                child: TextField(
+                  controller: TextEditingController(
+                    text: _initString,
+                  ),
+                  decoration: const InputDecoration(
+                    labelText: '何かを入力するフィールド',
+                    border: UnderlineInputBorder(),
+                    hintText: '何か入力してください',
+                    helperText: '何を入力しても大丈夫です',
+                  ),
+                  keyboardType: TextInputType.text,
+                  maxLength: 10,
+                  onChanged: (value) {
+                    _initString = value;
+                  },
+                ),
+              ),
+              const SizedBox(
+                height: 8,
+              ),
+              Row(
+                mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                children: [
+                  TextButton(
+                    onPressed: () {
+                      _save();
+                    },
+                    style: TextButton.styleFrom(
+                      backgroundColor: Colors.blue,
+                      shape: const RoundedRectangleBorder(
+                        borderRadius: BorderRadius.all(
+                          Radius.circular(100),
+                        ),
+                      ),
+                      fixedSize: const Size(96, 32),
+                    ),
+                    child: const Text(
+                      '保存',
+                      style: TextStyle(
+                        color: Colors.white,
+                        fontWeight: FontWeight.bold,
+                      ),
+                    ),
+                  ),
+                  TextButton(
+                    onPressed: () async {
+                      var result = await showDialog(
+                          context: context,
+                          barrierDismissible: false,
+                          builder: (BuildContext context) {
+                            return AlertDialog(
+                              title: const Text(
+                                '確認',
+                              ),
+                              content: const Text(
+                                'クリアしてもよいですか？',
+                              ),
+                              actions: [
+                                TextButton(
+                                  onPressed: () => Navigator.pop(context, 'NO'),
+                                  child: const Text('NO'),
+                                ),
+                                TextButton(
+                                  onPressed: () =>
+                                      Navigator.pop(context, 'YES'),
+                                  child: const Text('YES'),
+                                ),
+                              ],
+                            );
+                          });
+                      if (result == 'YES') {
+                        _clear();
+                        setState(() {
+                          _initString = '';
+                        });
+                      }
+                    },
+                    style: TextButton.styleFrom(
+                      backgroundColor: Colors.blue,
+                      shape: const RoundedRectangleBorder(
+                        borderRadius: BorderRadius.all(
+                          Radius.circular(100),
+                        ),
+                      ),
+                      fixedSize: const Size(96, 32),
+                    ),
+                    child: const Text(
+                      'クリア',
+                      style: TextStyle(
+                        color: Colors.white,
+                        fontWeight: FontWeight.bold,
+                      ),
+                    ),
+                  ),
+                  TextButton(
+                    onPressed: () {
+                      _init();
+                    },
+                    style: TextButton.styleFrom(
+                      backgroundColor: Colors.blue,
+                      shape: const RoundedRectangleBorder(
+                        borderRadius: BorderRadius.all(
+                          Radius.circular(100),
+                        ),
+                      ),
+                      fixedSize: const Size(96, 32),
+                    ),
+                    child: const Text(
+                      '読込',
+                      style: TextStyle(
+                        color: Colors.white,
+                        fontWeight: FontWeight.bold,
+                      ),
+                    ),
+                  ),
+                ],
+              ),
+              const SizedBox(
+                height: 16,
+              ),
+              Container(
+                color: Colors.grey,
+                height: 1,
+              ),
+              const SizedBox(
+                height: 16,
+              ),
+              const Text(
+                '1文字入力すると次に移動',
+              ),
+              Row(
+                mainAxisAlignment: MainAxisAlignment.center,
+                children: [
+                  SizedBox(
+                    width: 48,
+                    child: TextField(
+                      textAlign: TextAlign.center,
+                      decoration: const InputDecoration(
+                        border: OutlineInputBorder(),
+                      ),
+                      keyboardType: TextInputType.number,
+                      onChanged: (value) {
+                        if (value.length == 1) {
+                          _focusNode2.requestFocus();
+                        }
+                      },
+                    ),
+                  ),
+                  SizedBox(
+                    width: 48,
+                    child: TextField(
+                      textAlign: TextAlign.center,
+                      focusNode: _focusNode2,
+                      decoration: const InputDecoration(
+                        border: OutlineInputBorder(),
+                      ),
+                      keyboardType: TextInputType.number,
+                      onChanged: (value) {
+                        if (value.length == 1) {
+                          _focusNode3.requestFocus();
+                        }
+                      },
+                    ),
+                  ),
+                  SizedBox(
+                    width: 48,
+                    child: TextField(
+                      textAlign: TextAlign.center,
+                      focusNode: _focusNode3,
+                      decoration: const InputDecoration(
+                        border: OutlineInputBorder(),
+                      ),
+                      keyboardType: TextInputType.number,
+                      onChanged: (value) {
+                        if (value.length == 1) {
+                          _focusNode4.requestFocus();
+                        }
+                      },
+                    ),
+                  ),
+                  SizedBox(
+                    width: 48,
+                    child: TextField(
+                      textAlign: TextAlign.center,
+                      focusNode: _focusNode4,
+                      decoration: const InputDecoration(
+                        border: OutlineInputBorder(),
+                      ),
+                      keyboardType: TextInputType.number,
+                      onChanged: (value) {
+                        if (value.length == 1) {
+                          _focusNode5.requestFocus();
+                        }
+                      },
+                    ),
+                  ),
+                  SizedBox(
+                    width: 48,
+                    child: TextField(
+                      textAlign: TextAlign.center,
+                      focusNode: _focusNode5,
+                      decoration: const InputDecoration(
+                        border: OutlineInputBorder(),
+                      ),
+                      keyboardType: TextInputType.number,
+                      onChanged: (value) {
+                        if (value.length == 1) {
+                          _focusNode6.requestFocus();
+                        }
+                      },
+                    ),
+                  ),
+                  SizedBox(
+                    width: 48,
+                    child: TextField(
+                      textAlign: TextAlign.center,
+                      focusNode: _focusNode6,
+                      decoration: const InputDecoration(
+                        border: OutlineInputBorder(),
+                      ),
+                      keyboardType: TextInputType.number,
+                    ),
+                  ),
+                ],
+              ),
+              const SizedBox(
+                height: 16,
+              ),
+              Container(
+                color: Colors.grey,
+                height: 1,
+              ),
+              const SizedBox(
+                height: 16,
+              ),
+              TextButton(
+                onPressed: () async {
+                  var result = await Navigator.push(
+                    context,
+                    MaterialPageRoute(
+                      fullscreenDialog: false,
+                      builder: (context) => const QRReader(),
+                    ),
+                  );
+                  setState(() {
+                    _result = result;
+                  });
+                },
+                child: const Text(
+                  'QRコード読み込み（qr_code_scanner）',
+                ),
+              ),
+              Text(
+                _result,
+              ),
+              const SizedBox(
+                height: 16,
+              ),
+              Container(
+                color: Colors.grey,
+                height: 1,
+              ),
+              const SizedBox(
+                height: 16,
+              ),
+              TextButton(
+                onPressed: () async {
+                  var result = await Navigator.push(
+                    context,
+                    MaterialPageRoute(
+                      fullscreenDialog: true,
+                      builder: (context) => const QRReader2(),
+                    ),
+                  );
+                  setState(() {
+                    _result2 = result;
+                  });
+                },
+                child: const Text(
+                  'QRコード読み込み（mobile_scanner）',
+                ),
+              ),
+              Text(
+                _result2,
+              ),
 
-            const SizedBox(
-              height: 128,
-            ),
-          ],
+              const SizedBox(
+                height: 16,
+              ),
+              Container(
+                color: Colors.grey,
+                height: 1,
+              ),
+              const SizedBox(
+                height: 16,
+              ),
+            ],
+          ),
         ),
       ),
       floatingActionButton: FloatingActionButton(

@@ -13,12 +13,12 @@ class QRReader extends StatefulWidget {
 }
 
 class _QRReaderState extends State<QRReader> {
-  Barcode? result;
   QRViewController? controller;
   final GlobalKey qrKey = GlobalKey(debugLabel: 'QR');
+  bool _isScan = false;
 
-  // In order to get hot reload to work we need to pause the camera if the platform
-  // is android, or resume the camera if the platform is iOS.
+  // ホットリロードを機能させるには、プラットフォームがAndroidの場合はカメラを一時停止するか、
+  // プラットフォームがiOSの場合はカメラを再開する必要がある
   @override
   void reassemble() {
     super.reassemble();
@@ -44,14 +44,9 @@ class _QRReaderState extends State<QRReader> {
               child: Column(
                 mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                 children: [
-                  if (result != null)
-                    Text(
-                      'Barcode Type: ${describeEnum(result!.format)}   Data: ${result!.code}',
-                    )
-                  else
-                    const Text(
-                      'Scan a code',
-                    ),
+                  const Text(
+                    'Scan a code',
+                  ),
                   Row(
                     mainAxisAlignment: MainAxisAlignment.center,
                     crossAxisAlignment: CrossAxisAlignment.center,
@@ -134,7 +129,7 @@ class _QRReaderState extends State<QRReader> {
                   ),
                   ElevatedButton(
                     onPressed: () {
-                      Navigator.pop(context);
+                      Navigator.pop(context, 'キャンセルしました！');
                     },
                     child: const Text(
                       'キャンセル',
@@ -179,10 +174,26 @@ class _QRReaderState extends State<QRReader> {
       this.controller = controller;
     });
     controller.scannedDataStream.listen((scanData) {
-      setState(() {
-        result = scanData;
-      });
+      if (scanData.code == null) {
+        ScaffoldMessenger.of(context).showSnackBar(
+          const SnackBar(
+            content: Text(
+              'QR code data does not exist',
+            ),
+          ),
+        );
+      }
+      _transitionToNextScreen(scanData);
     });
+  }
+
+  void _transitionToNextScreen(Barcode scanData) {
+    if (!_isScan) {
+      controller?.pauseCamera();
+      _isScan = true;
+
+      Navigator.pop(context, '読み込んだ値: ${scanData.code}');
+    }
   }
 
   void _onPermissionSet(BuildContext context, QRViewController ctrl, bool p) {
