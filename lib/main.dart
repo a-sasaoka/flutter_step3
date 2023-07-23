@@ -1,10 +1,12 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_datetime_picker_plus/flutter_datetime_picker_plus.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
+import 'package:helloworld/barcode_scanner_window.dart';
 import 'package:helloworld/qr_reader.dart';
-import 'package:helloworld/qr_reader2.dart';
 import 'package:helloworld/time_to_live.dart';
 import 'package:helloworld/web_view.dart';
+import 'package:image_picker/image_picker.dart';
+import 'package:mobile_scanner/mobile_scanner.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:url_launcher/url_launcher.dart';
 import 'package:flutter_localizations/flutter_localizations.dart';
@@ -63,6 +65,8 @@ class _MyHomePageState extends State<MyHomePage> {
   final FocusNode _focusNode6 = FocusNode();
   String _result = '';
   String _result2 = '';
+
+  final MobileScannerController controller = MobileScannerController();
 
   @override
   void initState() {
@@ -152,8 +156,8 @@ class _MyHomePageState extends State<MyHomePage> {
           ],
         ),
       ),
-      body: SafeArea(
-        child: SingleChildScrollView(
+      body: SingleChildScrollView(
+        child: SafeArea(
           child: Column(
             children: [
               const Text(
@@ -658,11 +662,12 @@ class _MyHomePageState extends State<MyHomePage> {
                     context,
                     MaterialPageRoute(
                       fullscreenDialog: true,
-                      builder: (context) => const QRReader2(),
+                      builder: (context) =>
+                          const BarcodeScannerWithScanWindow(),
                     ),
                   );
                   setState(() {
-                    _result2 = result;
+                    _result2 = result ?? '';
                   });
                 },
                 child: const Text(
@@ -672,7 +677,98 @@ class _MyHomePageState extends State<MyHomePage> {
               Text(
                 _result2,
               ),
+              const SizedBox(
+                height: 16,
+              ),
+              Container(
+                color: Colors.grey,
+                height: 1,
+              ),
+              const SizedBox(
+                height: 16,
+              ),
+              TextButton(
+                onPressed: () {
+                  showModalBottomSheet(
+                    backgroundColor: Colors.transparent,
+                    context: context,
+                    builder: (BuildContext context) {
+                      return Container(
+                        alignment: Alignment.center,
+                        width: double.infinity,
+                        decoration: const BoxDecoration(
+                          color: Colors.white,
+                          borderRadius: BorderRadius.only(
+                            topLeft: Radius.circular(20),
+                            topRight: Radius.circular(20),
+                          ),
+                        ),
+                        child: const Text(
+                          'Bottom Sheet',
+                        ),
+                      );
+                    },
+                  );
+                },
+                style: TextButton.styleFrom(
+                  backgroundColor: Colors.blue,
+                  shape: const RoundedRectangleBorder(
+                    borderRadius: BorderRadius.all(
+                      Radius.circular(100),
+                    ),
+                  ),
+                  fixedSize: const Size(256, 32),
+                ),
+                child: const Text(
+                  '下から出てきます',
+                  style: TextStyle(
+                    color: Colors.white,
+                    fontWeight: FontWeight.bold,
+                  ),
+                ),
+              ),
+              const SizedBox(
+                height: 16,
+              ),
+              Container(
+                color: Colors.grey,
+                height: 1,
+              ),
+              const SizedBox(
+                height: 16,
+              ),
+              TextButton(
+                onPressed: () async {
+                  final ImagePicker picker = ImagePicker();
+                  final XFile? image = await picker.pickImage(
+                    source: ImageSource.gallery,
+                  );
+                  if (image != null) {
+                    if (await controller.analyzeImage(image.path)) {
+                      if (!mounted) return;
+                      ScaffoldMessenger.of(context).showSnackBar(
+                        const SnackBar(
+                          content: Text('Barcode found!'),
+                          backgroundColor: Colors.green,
+                        ),
+                      );
+                    } else {
+                      if (!mounted) return;
+                      ScaffoldMessenger.of(context).showSnackBar(
+                        const SnackBar(
+                          content: Text('No barcode found!'),
+                          backgroundColor: Colors.red,
+                        ),
+                      );
+                    }
+                  }
+                },
+                child: const Text(
+                  'QRコードの画像を読み込む',
+                ),
+              ),
 
+///////////////////////////////////////////////////
               const SizedBox(
                 height: 16,
               ),
@@ -735,5 +831,11 @@ class _MyHomePageState extends State<MyHomePage> {
         ),
       ),
     );
+  }
+
+  @override
+  void dispose() {
+    controller.dispose();
+    super.dispose();
   }
 }
